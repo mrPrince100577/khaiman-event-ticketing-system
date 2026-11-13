@@ -1,0 +1,13 @@
+# Profile prod: KHÔNG có giá trị mặc định cho thông tin kết nối. Thiếu biến môi trường thì app
+# không khởi động (fail fast) thay vì lặng lẽ nối nhầm DB. Bí mật nạp từ môi trường (xem T-28).
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    show-sql: false
+
+logging:
+  level:
+    root: INFO

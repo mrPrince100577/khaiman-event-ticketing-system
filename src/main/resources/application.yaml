@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: khaiman
+  profiles:
+    default: dev
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: UTC
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+

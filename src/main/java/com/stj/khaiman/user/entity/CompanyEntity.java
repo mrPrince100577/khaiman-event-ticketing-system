@@ -1,6 +1,7 @@
 package com.stj.khaiman.user.entity;
 
 import com.stj.khaiman.common.entity.BaseEntity;
+import com.stj.khaiman.event.entity.EventEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,4 +33,7 @@ public class CompanyEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     private Set<UserEntity> users;
+
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    private Set<EventEntity> events;
 }

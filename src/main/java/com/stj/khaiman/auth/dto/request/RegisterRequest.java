@@ -1,6 +1,5 @@
 package com.stj.khaiman.auth.dto.request;
 
-import com.stj.khaiman.user.enums.UserType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -15,9 +14,6 @@ public record RegisterRequest(
 
         @NotBlank(message = "Email must not be blank")
         @Email
-        String email,
-
-        @NotBlank(message = "User type must not be blank")
-        UserType userType
+        String email
 ) {
 }

@@ -1,15 +1,17 @@
 package com.stj.khaiman.user.entity;
 
+import com.stj.khaiman.auth.entity.RefreshToken;
 import com.stj.khaiman.common.entity.BaseEntity;
 import com.stj.khaiman.user.enums.UserStatus;
-import com.stj.khaiman.user.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -32,16 +34,37 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Column(nullable = false, name = "status")
     private UserStatus userStatus;
 
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private Set<UserHasRole> userHasRoles = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private CompanyEntity company;
 
+    @Column(name = "token_valid_after")
+    @Builder.Default
+    private Instant tokenValidAfter = null;
+
+    public void addRole(RoleEntity role){
+        this.userHasRoles.add(new UserHasRole(this, role));
+    }
+
+    @OneToMany(mappedBy = "user")
+    private Set<RefreshToken> refreshToken;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return userHasRoles.stream()
+                .flatMap(userHasRole -> userHasRole.getRole().getRoleHasPermissions().stream())
+                .map(roleHasPermission -> new SimpleGrantedAuthority(roleHasPermission.getPermission().getCode()))
+                .collect(Collectors.toSet());
+    }
+
+    public List<String> getRoleNames() {
+        return userHasRoles.stream()
+                .map(userHasRole -> userHasRole.getRole().getRoleName())
+                .toList();
     }
 
     @Override

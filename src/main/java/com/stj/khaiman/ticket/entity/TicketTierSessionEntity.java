@@ -19,11 +19,11 @@ import lombok.*;
 @AllArgsConstructor
 public class TicketTierSessionEntity extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_session_id", nullable = false)
     private EventSessionEntity eventSession;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_tier_id", nullable = false)
     private TicketTierEntity ticketTier;
 }

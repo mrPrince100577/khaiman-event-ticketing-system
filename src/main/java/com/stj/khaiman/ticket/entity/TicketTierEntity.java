@@ -17,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class TicketTierEntity extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "zone_id", nullable = false)
     private ZoneEntity zone;
 

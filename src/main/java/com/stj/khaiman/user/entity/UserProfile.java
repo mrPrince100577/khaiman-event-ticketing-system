@@ -32,7 +32,7 @@ public class UserProfile extends BaseEntity {
     @Column(name = "avatar")
     private String avatarUrl;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private UserEntity user;
 }

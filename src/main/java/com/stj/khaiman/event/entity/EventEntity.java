@@ -45,7 +45,7 @@ public class EventEntity extends BaseEntity {
     @JoinColumn(name = "company_id", nullable = false)
     private CompanyEntity company;
 
-    @Column(name = "event_status")
+    @Column(name = "event_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private EventStatus status;
 

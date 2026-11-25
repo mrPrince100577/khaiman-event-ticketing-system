@@ -1,8 +1,6 @@
-package com.stj.khaiman.auth.service;
+package com.stj.khaiman.auth.security;
 
 import com.stj.khaiman.auth.exception.AuthenticationErrorCode;
-import com.stj.khaiman.common.exception.AppErrorCode;
-import com.stj.khaiman.common.exception.AppException;
 import com.stj.khaiman.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;

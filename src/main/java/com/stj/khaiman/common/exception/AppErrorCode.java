@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 public enum AppErrorCode implements ErrorCode{
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Unknown Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_INPUT(HttpStatus.BAD_REQUEST.value(), "Invalid input request", HttpStatus.BAD_REQUEST),
+    INVALID_INPUT_FORMAT(HttpStatus.BAD_REQUEST.value(), "Invalid input format request", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;

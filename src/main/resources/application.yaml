@@ -15,3 +15,11 @@ spring:
         jdbc:
           time_zone: UTC
 
+# Tài khoản admin đầu tiên, AdminAccountInitializer tạo khi app khởi động nếu chưa có.
+# Giá trị lấy từ biến môi trường (dev: file .env). Để trống ADMIN_PASSWORD thì bỏ qua.
+app:
+  admin:
+    username: ${ADMIN_USERNAME:}
+    email: ${ADMIN_EMAIL:}
+    password: ${ADMIN_PASSWORD:}
+

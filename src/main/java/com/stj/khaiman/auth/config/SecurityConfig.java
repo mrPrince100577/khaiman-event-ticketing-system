@@ -2,6 +2,7 @@ package com.stj.khaiman.auth.config;
 
 import com.stj.khaiman.auth.constants.JwtConstant;
 import com.stj.khaiman.auth.security.AccessTokenTypeValidator;
+import com.stj.khaiman.auth.security.JwtAccessDeniedHandler;
 import com.stj.khaiman.auth.security.JwtAuthenticationEntryPoint;
 import com.stj.khaiman.auth.security.RevokedTokenValidator;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,7 +49,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http,
                                             JwtAuthenticationConverter jwtAuthenticationConverter,
-                                            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+                                            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+                                            JwtAccessDeniedHandler jwtAccessDeniedHandler) {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -57,7 +59,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter))
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)   // 401
+                        .accessDeniedHandler(jwtAccessDeniedHandler))            // 403
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();

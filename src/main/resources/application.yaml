@@ -14,6 +14,7 @@ spring:
       hibernate:
         jdbc:
           time_zone: UTC
+        default_batch_fetch_size: 50
 
 # Tài khoản admin đầu tiên, AdminAccountInitializer tạo khi app khởi động nếu chưa có.
 # Giá trị lấy từ biến môi trường (dev: file .env). Để trống ADMIN_PASSWORD thì bỏ qua.

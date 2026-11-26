@@ -1,6 +1,8 @@
 package com.stj.khaiman.user.repository;
 
 import com.stj.khaiman.user.entity.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +29,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @EntityGraph(attributePaths = "userHasRoles.role.roleHasPermissions.permission")
     Optional<UserEntity> findWithRolesById(Long id);
+
+    @Query(
+            """
+        SELECT u
+        FROM UserEntity u
+        WHERE LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))
+"""
+    )
+    Page<UserEntity> search(@Param("keyword") String keyword, Pageable pageable);
 }

@@ -1,6 +1,5 @@
 package com.stj.khaiman.user.entity;
 
-import com.stj.khaiman.auth.entity.RefreshToken;
 import com.stj.khaiman.common.entity.BaseEntity;
 import com.stj.khaiman.user.enums.UserStatus;
 import jakarta.persistence.*;
@@ -49,9 +48,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
     public void addRole(RoleEntity role){
         this.userHasRoles.add(new UserHasRole(this, role));
     }
-
-    @OneToMany(mappedBy = "user")
-    private Set<RefreshToken> refreshToken;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

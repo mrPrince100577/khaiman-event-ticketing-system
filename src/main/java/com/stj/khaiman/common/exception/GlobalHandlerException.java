@@ -1,10 +1,12 @@
 package com.stj.khaiman.common.exception;
 
+import com.stj.khaiman.auth.exception.AuthenticationErrorCode;
 import com.stj.khaiman.common.dto.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -86,6 +88,12 @@ public class GlobalHandlerException {
     public ResponseEntity<ErrorResponse> handleUnknown(Exception ex, WebRequest request) {
         log.error("Unhandled exception at path={}", path(request), ex);   // ex ở cuối nên in cả stack trace
         return build(AppErrorCode.INTERNAL_SERVER_ERROR, AppErrorCode.INTERNAL_SERVER_ERROR.getMessage(), request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex, WebRequest request) {
+        log.warn("Access denied: path={}", path(request));
+        return build(AuthenticationErrorCode.ACCESS_DENIED, AuthenticationErrorCode.ACCESS_DENIED.getMessage(), request);
     }
 
     // Hàm helper

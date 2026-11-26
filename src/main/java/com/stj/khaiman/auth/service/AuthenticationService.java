@@ -102,9 +102,11 @@ public class AuthenticationService {
         //check token
         Jwt jwt = jwtService.verifyToken(token);
 
-        //check token in table or not
-        RefreshToken oldRefreshToken = refreshTokenRepository.findById(jwt.getId())
-                .orElseThrow(() -> new AppException(AuthenticationErrorCode.INVALID_TOKEN));
+        //delete old token in one step: 0 rows = token already used (or by a concurrent request)
+        //if a check below throws, @Transactional rolls this delete back
+        if (refreshTokenRepository.deleteByJti(jwt.getId()) == 0) {
+            throw new AppException(AuthenticationErrorCode.INVALID_TOKEN);
+        }
 
         //get user with that token
         UserEntity user = userRepository.findWithRolesById(Long.parseLong(jwt.getSubject()))
@@ -116,8 +118,6 @@ public class AuthenticationService {
         if (user.getUserStatus() == UserStatus.INACTIVE) {
             throw new AppException(AuthenticationErrorCode.ACCOUNT_INACTIVE);
         }
-
-        refreshTokenRepository.delete(oldRefreshToken);
 
         //keep the session id of the current login session
         return issueTokens(user, jwt.getClaimAsString(JwtConstant.SESSION_ID));

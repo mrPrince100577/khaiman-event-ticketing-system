@@ -30,12 +30,12 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @EntityGraph(attributePaths = "userHasRoles.role.roleHasPermissions.permission")
     Optional<UserEntity> findWithRolesById(Long id);
 
-    @Query(
-            """
+    @Query("""
         SELECT u
         FROM UserEntity u
+        LEFT JOIN UserProfile p ON p.user = u
         WHERE LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))
-"""
-    )
+           OR LOWER(CONCAT(p.firstName, ' ', p.lastName)) LIKE LOWER(CONCAT('%', :keyword, '%'))
+        """)
     Page<UserEntity> search(@Param("keyword") String keyword, Pageable pageable);
 }

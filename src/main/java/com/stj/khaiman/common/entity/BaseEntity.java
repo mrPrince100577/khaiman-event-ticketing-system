@@ -23,12 +23,14 @@ public class BaseEntity {
     private Long id;
 
     @CreatedDate
+    @Column(updatable = false)
     private Instant createdAt;
 
     @LastModifiedDate
     private Instant updatedAt;
 
     @CreatedBy
+    @Column(updatable = false)
     private Long createdBy;
 
     @LastModifiedBy

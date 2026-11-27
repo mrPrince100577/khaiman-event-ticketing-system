@@ -1,6 +1,7 @@
 package com.stj.khaiman.user.repository;
 
 import com.stj.khaiman.user.entity.UserEntity;
+import com.stj.khaiman.user.enums.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -34,8 +35,15 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
         SELECT u
         FROM UserEntity u
         LEFT JOIN UserProfile p ON p.user = u
-        WHERE LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))
-           OR LOWER(CONCAT(p.firstName, ' ', p.lastName)) LIKE LOWER(CONCAT('%', :keyword, '%'))
+        WHERE (LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))
+               OR LOWER(CONCAT(p.firstName, ' ', p.lastName)) LIKE LOWER(CONCAT('%', :keyword, '%')))
+          AND (:status IS NULL OR u.userStatus = :status)
+          AND (:role IS NULL OR EXISTS (
+                  SELECT 1 FROM UserHasRole uhr
+                  WHERE uhr.user = u AND uhr.role.roleName = :role))
         """)
-    Page<UserEntity> search(@Param("keyword") String keyword, Pageable pageable);
+    Page<UserEntity> search(@Param("keyword") String keyword,
+                            @Param("status") UserStatus status,
+                            @Param("role") String role,
+                            Pageable pageable);
 }

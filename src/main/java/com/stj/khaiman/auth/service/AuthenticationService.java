@@ -12,6 +12,7 @@ import com.stj.khaiman.auth.mapper.RefreshTokenMapper;
 import com.stj.khaiman.auth.record.IssuedToken;
 import com.stj.khaiman.auth.repository.BlackListTokenRepository;
 import com.stj.khaiman.auth.repository.RefreshTokenRepository;
+import com.stj.khaiman.common.exception.AppErrorCode;
 import com.stj.khaiman.common.exception.AppException;
 import com.stj.khaiman.user.entity.RoleEntity;
 import com.stj.khaiman.user.entity.UserEntity;
@@ -21,6 +22,8 @@ import com.stj.khaiman.user.mapper.UserMapper;
 import com.stj.khaiman.user.repository.RoleRepository;
 import com.stj.khaiman.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -50,6 +53,10 @@ public class AuthenticationService {
     public RegisterResponse register(RegisterRequest request) {
         if (userRepository.existsByUsernameOrEmail(request.username(), request.email())) {
             throw new AppException(AuthenticationErrorCode.USER_EXISTED);
+        }
+
+        if (request.password().getBytes(StandardCharsets.UTF_8).length > 72) {
+            throw new AppException(AppErrorCode.INVALID_INPUT);
         }
 
         RoleEntity customerRole = roleRepository.findByRoleName(UserType.CUSTOMER.name())

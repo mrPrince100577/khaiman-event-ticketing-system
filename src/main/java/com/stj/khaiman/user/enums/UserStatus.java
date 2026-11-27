@@ -1,7 +1,16 @@
 package com.stj.khaiman.user.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum UserStatus {
-    ACTIVE,
-    INACTIVE,
-    BANNED
+    ACTIVE("Active"),
+    INACTIVE("Inactive"),
+    BANNED("Banned");
+
+    private final String label;
+
+    UserStatus(String label){
+        this.label = label;
+    }
 }

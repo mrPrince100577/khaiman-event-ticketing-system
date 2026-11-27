@@ -11,3 +11,8 @@ spring:
 logging:
   level:
     root: INFO
+
+# Domain của frontend, nhiều domain cách nhau bằng dấu phẩy. Không có giá trị mặc định (fail fast).
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
